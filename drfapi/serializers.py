@@ -44,9 +44,9 @@ class MedicionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Medicion
         fields = ['url', 'Medidor', 'Consumo', 'Fecha_hora']
-        extra_kwargs = {
-            'Medidor': {'lookup_field': 'Nombre'}
-        }
+        # extra_kwargs = {
+        #     'Medidor': {'lookup_field': 'Nombre'}
+        # }
 
 
 # Serializador para obtener el Consumo Total
