@@ -1,9 +1,12 @@
 from rest_framework import generics, status, viewsets, mixins
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 from .models import Medidor, Medicion
+
 from .serializers import ConsumoTotalSerializer, MedicionSerializer, MedidoresSerializer, ConsumoPromedioSerializer
-from .serializers import ConsumoMinimoSerializer, ConsumoMaximoSerializer, MedidorDetalleSerializer
+from .serializers import ConsumoMinimoSerializer, ConsumoMaximoSerializer, MedidorDetalleSerializer, UserSerializer
+
 from .utils import calculo_consumos
 
 
@@ -27,6 +30,9 @@ class MedidorDetalle(generics.RetrieveAPIView):
 class AgregarMedidor(mixins.CreateModelMixin,
                      viewsets.GenericViewSet):
     serializer_class = MedidoresSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
 
 
 # Regsitrar un Consumo
@@ -90,3 +96,16 @@ class ConsumoPromedio(generics.RetrieveAPIView):
         return get_object_or_404(self.get_queryset(), Nombre=self.kwargs['Nombre'])
 
 
+# Vista de la lista de Usuarios
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+# Vista del detalle de un usuario
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return get_object_or_404(self.get_queryset(), username=self.kwargs['username'])

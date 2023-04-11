@@ -1,15 +1,17 @@
 from rest_framework import serializers
 from .models import Medidor, Medicion
+from django.contrib.auth.models import User
 
 
 # Serializador para la lista de Medidores
 class MedidoresSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Medidor
-        fields = ['Nombre', 'Llave_Ident', 'url']
+        fields = ['Nombre', 'Llave_Ident', 'usuario', 'url']
         extra_kwargs = {
-            'url': {'lookup_field': 'Nombre'}
-                        }
+            'url': {'lookup_field': 'Nombre'},
+            'usuario': {'lookup_field': 'username'}
+            }
 
 
 # Serializador para los detalles del Medidor
@@ -22,8 +24,11 @@ class MedidorDetalleSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Medidor
-        fields = ['Nombre', 'Llave_Ident', 'Mediciones', 'Consumo_Total', 'Consumo_Maximo', 'Consumo_Minimo',
+        fields = ['Nombre', 'Llave_Ident', 'usuario', 'Mediciones', 'Consumo_Total', 'Consumo_Maximo', 'Consumo_Minimo',
                   'Consumo_Promedio']
+        extra_kwargs = {
+            'usuario': {'lookup_field': 'username'}
+        }
 
 
 # Serializador para Agregar Medidor
@@ -39,6 +44,9 @@ class MedicionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Medicion
         fields = ['url', 'Medidor', 'Consumo', 'Fecha_hora']
+        extra_kwargs = {
+            'Medidor': {'lookup_field': 'Nombre'}
+        }
 
 
 # Serializador para obtener el Consumo Total
@@ -67,3 +75,12 @@ class ConsumoMaximoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medidor
         fields = ['Nombre', 'Llave_Ident', 'Consumo_max']
+
+
+# Serializador para mostrar los usuarios
+class UserSerializer(serializers.ModelSerializer):
+    medidores = serializers.PrimaryKeyRelatedField(many=True, queryset=Medidor.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'medidores']

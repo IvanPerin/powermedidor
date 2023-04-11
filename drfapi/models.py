@@ -12,6 +12,7 @@ class Medidor(models.Model):
     Consumo_min = models.FloatField(default=0.0)
     Consumo_total = models.FloatField(default=0.0)
     Consumo_prom = models.FloatField(default=0.0)
+    usuario = models.ForeignKey('auth.User', related_name='medidores', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['Nombre']

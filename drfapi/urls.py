@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import ListaMedidores, AgregarMedidor, RegistrarConsumo, MedidorDetalle, MedicionDetalle, \
-    ConsumoTotal, ConsumoPromedio, ConsumoMinimo, ConsumoMaximo
+    ConsumoTotal, ConsumoPromedio, ConsumoMinimo, ConsumoMaximo, UserList, UserDetail
 
 
 '------------------------------Create a router and register our viewsets with it------------------------------------'
@@ -16,6 +16,8 @@ router.register(r'Registrar-Consumo', RegistrarConsumo, basename='Registrar_Cons
 urlpatterns = [
     path(r'', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
+    path('users/', UserList.as_view()),
+    path('users/<username>/', UserDetail.as_view(), name='user-detail'),
     path('Medidor/<Nombre>', MedidorDetalle.as_view(), name='medidor-detail'),
     path('Mediciones/<int:pk>', MedicionDetalle.as_view(), name='medicion-detail'),
     path('Medidor/<Nombre>/Consumo-Total/', ConsumoTotal.as_view(), name='consumo-total'),
