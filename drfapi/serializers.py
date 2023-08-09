@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class MedidoresSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Medidor
-        fields = ['Nombre', 'Llave_Ident', 'usuario', 'url']
+        fields = ['url', 'Nombre', 'Llave_Ident', 'usuario']
         extra_kwargs = {
             'url': {'lookup_field': 'Nombre'},
             'usuario': {'lookup_field': 'username'}
@@ -40,10 +40,9 @@ class AgregarMedidorSerializer(serializers.ModelSerializer):
 
 # Serializador para las Mediciones
 class MedicionSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
+     class Meta:
         model = Medicion
-        fields = ['url', 'Medidor', 'Consumo', 'Fecha_hora']
+        fields = ['Medidor', 'Consumo', 'Fecha_hora']
         # extra_kwargs = {
         #     'Medidor': {'lookup_field': 'Nombre'}
         # }
